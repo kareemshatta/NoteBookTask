@@ -34,12 +34,7 @@ class AllNotesFragment : Fragment() {
         // Inflate the layout for this fragment
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_all_notes, container, false)
 
-        binding.addNoteBtn.setOnClickListener { view : View ->
-            Navigation.findNavController(view).navigate(R.id.action_allNotesFragment_to_addNoteFragment)
-        }
-
         databaseRef = FirebaseDatabase.getInstance().getReference("Notes")
-
 
 
         return binding.root
@@ -47,6 +42,11 @@ class AllNotesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.addNoteBtn.setOnClickListener { view : View ->
+            Navigation.findNavController(view).navigate(R.id.action_allNotesFragment_to_addNoteFragment)
+        }
+
         readNotesData()
     }
 

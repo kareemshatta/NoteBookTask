@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notebook.R
@@ -44,7 +45,8 @@ class NotesRVAdapter(private val notesList: MutableList<Note>) :
         // contents of the view with that element
         viewHolder.noteTV.text = notesList.get(position).text
         viewHolder.noteTV.setOnClickListener(){
-            it.findNavController().navigate(R.id.action_allNotesFragment_to_editNoteFragment)
+            val bundle = bundleOf("noteId" to notesList.get(position).id.toString())
+            it.findNavController().navigate(R.id.action_allNotesFragment_to_editNoteFragment, bundle)
         }
 
     }
