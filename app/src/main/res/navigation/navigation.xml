@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/navigation"
+    app:startDestination="@id/allNotesFragment">
+
+    <fragment
+        android:id="@+id/allNotesFragment"
+        android:name="com.example.notebook.AllNotesFragment"
+        android:label="AllNotesFragment" >
+        <action
+            android:id="@+id/action_allNotesFragment_to_addNoteFragment"
+            app:destination="@+id/addNoteFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popUpTo="@+id/allNotesFragment" />
+        <action
+            android:id="@+id/action_allNotesFragment_to_editNoteFragment"
+            app:destination="@id/editNoteFragment"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popUpTo="@+id/allNotesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNoteFragment"
+        android:name="com.example.notebook.AddNoteFragment"
+        android:label="AddNoteFragment" >
+        <action
+            android:id="@+id/action_addNoteFragment_to_allNotesFragment"
+            app:destination="@id/allNotesFragment"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/allNotesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editNoteFragment"
+        android:name="com.example.notebook.EditNoteFragment"
+        android:label="EditNoteFragment" >
+        <action
+            android:id="@+id/action_editNoteFragment_to_allNotesFragment"
+            app:destination="@id/allNotesFragment"
+            app:exitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@+id/allNotesFragment" />
+        <argument
+            android:name="node_id"
+            app:argType="string"
+            android:defaultValue=" " />
+    </fragment>
+</navigation>

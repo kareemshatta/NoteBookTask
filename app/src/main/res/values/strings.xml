@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">NoteBook</string>
+    <string name="app_icon">app icon</string>
+    <string name="note_text">note text</string>
+    <string name="add_note">Add Note</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="save">Save</string>
+    <string name="note_hint">Add your note here...</string>
+    <string name="header_photo">header_photo</string>
+    <string name="copy_link">Copy link</string>
+    <string name="edit">Edit</string>
+</resources>
