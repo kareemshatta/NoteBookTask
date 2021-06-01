@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.notebook.databinding.FragmentAddNoteBinding
+import com.example.notebook.model.Constants
 import com.example.notebook.model.Note
 import com.google.firebase.database.FirebaseDatabase
 
@@ -51,7 +52,7 @@ class AddNoteFragment : Fragment() {
 
 
     private fun saveNote(newNote: Note) {
-        val database = FirebaseDatabase.getInstance().getReference("Notes")
+        val database = FirebaseDatabase.getInstance().getReference("Notes/${Constants.USER_ID}")
         newNote.id = database.push().key ?: ""
         database.child(newNote.id).setValue(newNote).addOnSuccessListener {
             findNavController().navigate(R.id.action_addNoteFragment_to_allNotesFragment)

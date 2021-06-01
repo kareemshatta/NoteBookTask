@@ -9,6 +9,7 @@ import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.os.postDelayed
+import com.example.notebook.model.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_splash.*
@@ -19,7 +20,6 @@ const val TAG = "Splash_Activity_Log"
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private var splashDelay: Long = 10000L
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,6 +58,7 @@ class SplashActivity : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInAnonymously:success")
                         val user = auth.currentUser
+                        Constants.USER_ID = requireNotNull(user?.uid)
                         updateUI(user)
 
                     } else {
@@ -69,13 +70,13 @@ class SplashActivity : AppCompatActivity() {
                     }
                 }
         }else{
-            splashDelay = 2000L
+            Constants.USER_ID = requireNotNull(auth.currentUser?.uid)
             //make a delay time.
             Handler().postDelayed({
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
-            }, splashDelay)
+            }, 3000)
         }
 
     }

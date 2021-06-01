@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
+import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notebook.adapters.NotesRVAdapter
 import com.example.notebook.databinding.FragmentEditNoteBinding
+import com.example.notebook.model.Constants
 import com.example.notebook.model.Note
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.fragment_edit_note.*
@@ -33,6 +35,8 @@ class EditNoteFragment : Fragment() {
     lateinit var binding: FragmentEditNoteBinding
     lateinit var  databaseRef : DatabaseReference
     lateinit var note: Note
+    lateinit var noteId:String
+    lateinit var userId: String
     private val args: EditNoteFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -50,18 +54,27 @@ class EditNoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var noteId = requireNotNull(args.noteId ?: requireArguments().getString("noteId"))
-        if (noteId != null) {
+
+
+        if (args.noteId != null){
+            noteId = requireNotNull(args.noteId)
+            userId = requireNotNull(args.userId)
+        }else{
+            noteId = requireNotNull(arguments?.getString("noteId"))
+            userId = Constants.USER_ID
+        }
+
+
+        if (noteId != null && userId != null) {
             readNoteData(noteId)
         }else{
             findNavController().navigate(R.id.action_editNoteFragment_to_allNotesFragment)
         }
-        binding.noteTextET.doAfterTextChanged{
+        binding.noteTextET.doAfterTextChanged {
             var newNote = Note(noteId,binding.noteTextET.text.toString())
             editNote(newNote)
-
+            binding.noteTextET.setSelection(binding.noteTextET.text.length)
 //            Log.d("EditNoteFragment","text is changed")
-
         }
 
         binding.saveNoteBtn.setOnClickListener { view : View ->
@@ -77,7 +90,7 @@ class EditNoteFragment : Fragment() {
 
         binding.copyNoteLinkBtn.setOnClickListener{view: View ->
 
-            copyNoteLinkToClipboard("example.com/EditNoteFragment/$noteId")
+            copyNoteLinkToClipboard("example.com/EditNoteFragment/$userId/$noteId")
         }
 
     }
@@ -92,7 +105,7 @@ class EditNoteFragment : Fragment() {
 
 
     private fun editNote(newNote: Note) {
-        databaseRef = FirebaseDatabase.getInstance().getReference("Notes")
+        databaseRef = FirebaseDatabase.getInstance().getReference("Notes/$userId")
         val childUpdates=HashMap<String,String>()
         childUpdates["id"] = newNote.id
         childUpdates["text"] = newNote.text
@@ -107,7 +120,7 @@ class EditNoteFragment : Fragment() {
     private fun readNoteData(noteId: String){
         binding.loadNoteBP.visibility = View.VISIBLE
 
-        databaseRef = FirebaseDatabase.getInstance().getReference("Notes/$noteId")
+        databaseRef = FirebaseDatabase.getInstance().getReference("Notes/$userId/$noteId")
 
         databaseRef.addValueEventListener( object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) =

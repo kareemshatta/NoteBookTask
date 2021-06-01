@@ -1,5 +1,6 @@
 package com.example.notebook.adapters
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,11 +9,12 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notebook.AllNotesFragment
 import com.example.notebook.R
 import com.example.notebook.model.Note
 
 
-class NotesRVAdapter(private val notesList: MutableList<Note>) :
+class NotesRVAdapter(private val fragment: AllNotesFragment,private val notesList: MutableList<Note>) :
     RecyclerView.Adapter<NotesRVAdapter.ViewHolder>() {
 
     /**
@@ -45,8 +47,7 @@ class NotesRVAdapter(private val notesList: MutableList<Note>) :
         // contents of the view with that element
         viewHolder.noteTV.text = notesList.get(position).text
         viewHolder.noteTV.setOnClickListener(){
-            val bundle = bundleOf("noteId" to notesList.get(position).id.toString())
-            it.findNavController().navigate(R.id.action_allNotesFragment_to_editNoteFragment, bundle)
+            fragment.noteListItemAction(notesList.get(position).id)
         }
 
     }

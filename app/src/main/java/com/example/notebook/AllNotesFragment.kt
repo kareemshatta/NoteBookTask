@@ -7,12 +7,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notebook.Interfaces.ClickListnerInterface
 import com.example.notebook.adapters.NotesRVAdapter
 import com.example.notebook.databinding.FragmentAllNotesBinding
+import com.example.notebook.model.Constants
 import com.example.notebook.model.Note
 import com.google.firebase.database.*
 
@@ -20,7 +27,7 @@ import com.google.firebase.database.*
  * A simple [Fragment] subclass.
  */
 
-class AllNotesFragment : Fragment() {
+class AllNotesFragment : Fragment(),ClickListnerInterface {
 
 
     lateinit var noteList :MutableList<Note>
@@ -34,7 +41,7 @@ class AllNotesFragment : Fragment() {
         // Inflate the layout for this fragment
         binding= DataBindingUtil.inflate(inflater, R.layout.fragment_all_notes, container, false)
 
-        databaseRef = FirebaseDatabase.getInstance().getReference("Notes")
+        databaseRef = FirebaseDatabase.getInstance().getReference("Notes/${Constants.USER_ID}")
 
 
         return binding.root
@@ -44,7 +51,7 @@ class AllNotesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.addNoteBtn.setOnClickListener { view : View ->
-            Navigation.findNavController(view).navigate(R.id.action_allNotesFragment_to_addNoteFragment)
+            findNavController(view).navigate(R.id.action_allNotesFragment_to_addNoteFragment)
         }
 
         readNotesData()
@@ -63,23 +70,29 @@ class AllNotesFragment : Fragment() {
                         noteList.add(requireNotNull(note.getValue(Note::class.java)))
                     }
                     binding.loadNotesBP.visibility = View.GONE
-                    binding.notesRecyclerView.layoutManager = LinearLayoutManager(requireContext(),
+                    binding.notesRecyclerView.layoutManager = LinearLayoutManager(this@AllNotesFragment.context,
                         RecyclerView.VERTICAL,false)
-                    val rvAdapter = NotesRVAdapter(noteList)
+                    val rvAdapter = NotesRVAdapter(this@AllNotesFragment,noteList)
                     binding.notesRecyclerView.adapter = rvAdapter
                 }else{
-                    binding.loadNotesBP.visibility = View.VISIBLE
+                    binding.loadNotesBP.visibility = View.GONE
+                    Toast.makeText(requireContext(),"Can't find any note",Toast.LENGTH_LONG).show()
                     Log.d("NotesActivity_Read", "snapshot:not exist")
                 }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
-                binding.loadNotesBP.visibility = View.VISIBLE
-                Log.d("NotesActivity_Read", "loadPost:onCancelled"+databaseError.message)
+                binding.loadNotesBP.visibility = View.GONE
+                Toast.makeText(requireContext(),"connection error",Toast.LENGTH_LONG).show()
             }
         }
         )
+    }
+
+    override fun noteListItemAction(noteId: String) {
+        val bundle = bundleOf("noteId" to noteId)
+        findNavController().navigate(R.id.action_allNotesFragment_to_editNoteFragment, bundle)
     }
 
 }
