@@ -10,14 +10,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.notebook.Interfaces.ClickListnerInterface
-import com.example.notebook.adapters.NotesRVAdapter
+import com.example.notebook.Interfaces.NotesClickListnerInterface
+import com.example.notebook.adapters.NotesRecyclerViewAdapter
 import com.example.notebook.databinding.FragmentAllNotesBinding
 import com.example.notebook.model.Constants
 import com.example.notebook.model.Note
@@ -27,11 +25,11 @@ import com.google.firebase.database.*
  * A simple [Fragment] subclass.
  */
 
-class AllNotesFragment : Fragment(),ClickListnerInterface {
+class AllNotesFragment : Fragment(),NotesClickListnerInterface {
 
 
     lateinit var noteList :MutableList<Note>
-    lateinit var  databaseRef : DatabaseReference
+    lateinit var databaseRef : DatabaseReference
     lateinit var binding: FragmentAllNotesBinding
 
     override fun onCreateView(
@@ -72,7 +70,7 @@ class AllNotesFragment : Fragment(),ClickListnerInterface {
                     binding.loadNotesBP.visibility = View.GONE
                     binding.notesRecyclerView.layoutManager = LinearLayoutManager(this@AllNotesFragment.context,
                         RecyclerView.VERTICAL,false)
-                    val rvAdapter = NotesRVAdapter(this@AllNotesFragment,noteList)
+                    val rvAdapter = NotesRecyclerViewAdapter(this@AllNotesFragment,noteList)
                     binding.notesRecyclerView.adapter = rvAdapter
                 }else{
                     binding.loadNotesBP.visibility = View.GONE
@@ -90,7 +88,7 @@ class AllNotesFragment : Fragment(),ClickListnerInterface {
         )
     }
 
-    override fun noteListItemAction(noteId: String) {
+    override fun onNoteClicked(noteId: String) {
         val bundle = bundleOf("noteId" to noteId)
         findNavController().navigate(R.id.action_allNotesFragment_to_editNoteFragment, bundle)
     }

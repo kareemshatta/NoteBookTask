@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.core.os.postDelayed
 import com.example.notebook.model.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -38,7 +37,7 @@ class SplashActivity : AppCompatActivity() {
 
         //PERFORM ANIMATION USING THAT IMAGE
         val slideAnimation = AnimationUtils.loadAnimation(this, R.anim.slide_side_in)
-        app_logo_IV.startAnimation(slideAnimation)
+        app_logo_ImageView.startAnimation(slideAnimation)
 
 
     }

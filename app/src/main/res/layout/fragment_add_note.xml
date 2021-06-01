@@ -14,7 +14,7 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/note_text_ET"
+                android:id="@+id/note_text_EditText"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
@@ -26,14 +26,14 @@
                 android:gravity="start|top"
                 android:hint="@string/note_hint"
                 android:inputType="textMultiLine"
-                app:layout_constraintBottom_toTopOf="@+id/save_note_btn"
+                app:layout_constraintBottom_toTopOf="@+id/save_note_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:targetApi="o" />
 
             <Button
-                android:id="@+id/save_note_btn"
+                android:id="@+id/save_note_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
