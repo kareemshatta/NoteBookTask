@@ -69,7 +69,7 @@ class EditNoteFragment : Fragment() {
 //            Log.d("EditNoteFragment","text is changed")
         }
 
-        binding.saveNoteButton.setOnClickListener { view : View ->
+        binding.saveNoteButton.setOnClickListener {
 
             if (binding.noteTextEditText.text.isNotEmpty()){
                 var newNote = Note(noteId,binding.noteTextEditText.text.toString())
@@ -80,7 +80,7 @@ class EditNoteFragment : Fragment() {
             }
         }
 
-        binding.copyNoteLinkButton.setOnClickListener{view: View ->
+        binding.copyNoteLinkButton.setOnClickListener{
 
             copyNoteLinkToClipboard("example.com/EditNoteFragment/$userId/$noteId")
         }

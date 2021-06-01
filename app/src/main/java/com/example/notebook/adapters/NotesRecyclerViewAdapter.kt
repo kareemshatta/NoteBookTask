@@ -18,7 +18,7 @@ class NotesRecyclerViewAdapter(private val fragment: AllNotesFragment, private v
      * (custom ViewHolder).
      */
     class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var noteTV: TextView
+        var noteTextView: TextView
 
         init {
             // Define click listener for the ViewHolder's View.
