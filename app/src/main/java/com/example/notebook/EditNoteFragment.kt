@@ -1,6 +1,9 @@
 package com.example.notebook
 
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,15 +11,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notebook.adapters.NotesRVAdapter
 import com.example.notebook.databinding.FragmentEditNoteBinding
 import com.example.notebook.model.Note
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.fragment_edit_note.*
+import kotlin.math.log
 
 /**
  * A simple [Fragment] subclass.
@@ -26,6 +33,7 @@ class EditNoteFragment : Fragment() {
     lateinit var binding: FragmentEditNoteBinding
     lateinit var  databaseRef : DatabaseReference
     lateinit var note: Note
+    private val args: EditNoteFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,32 +44,51 @@ class EditNoteFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_edit_note, container, false)
 
 
-//        binding.addNoteBtn.setOnClickListener { view : View ->
-//            Navigation.findNavController(view).navigate(R.id.action_allNotesFragment_to_addNoteFragment)
-//        }
-
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val noteId = requireNotNull(arguments?.getString("noteId"))
-        readNoteData(noteId)
+        var noteId = requireNotNull(args.noteId ?: requireArguments().getString("noteId"))
+        if (noteId != null) {
+            readNoteData(noteId)
+        }else{
+            findNavController().navigate(R.id.action_editNoteFragment_to_allNotesFragment)
+        }
+        binding.noteTextET.doAfterTextChanged{
+            var newNote = Note(noteId,binding.noteTextET.text.toString())
+            editNote(newNote)
+
+//            Log.d("EditNoteFragment","text is changed")
+
+        }
 
         binding.saveNoteBtn.setOnClickListener { view : View ->
 
             if (binding.noteTextET.text.isNotEmpty()){
                 var newNote = Note(noteId,binding.noteTextET.text.toString())
                 editNote(newNote)
+                Toast.makeText(requireContext(),"your note is updated successfully",Toast.LENGTH_LONG).show()
             }else{
                 Toast.makeText(requireContext(),"Please write new note firstly",Toast.LENGTH_LONG).show()
             }
         }
 
+        binding.copyNoteLinkBtn.setOnClickListener{view: View ->
+
+            copyNoteLinkToClipboard("example.com/EditNoteFragment/$noteId")
+        }
+
     }
 
+    private fun copyNoteLinkToClipboard(copyText: String) {
+        val clipbroadManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("copy text",copyText)
+        clipbroadManager.setPrimaryClip(clipData)
+        Toast.makeText(requireContext(),"Link is copied successfully",Toast.LENGTH_LONG).show()
+
+    }
 
 
     private fun editNote(newNote: Note) {
@@ -70,7 +97,6 @@ class EditNoteFragment : Fragment() {
         childUpdates["id"] = newNote.id
         childUpdates["text"] = newNote.text
         databaseRef.child(newNote.id).updateChildren(childUpdates as Map<String, String>)
-        Toast.makeText(requireContext(),"your note is updated successfully",Toast.LENGTH_LONG).show()
 
     }
 
