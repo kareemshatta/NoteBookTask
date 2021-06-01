@@ -30,18 +30,15 @@ class AddNoteFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_add_note, container, false)
 
-//        requireActivity().actionBar?.setDisplayHomeAsUpEnabled(true)
-
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.saveNoteBtn.setOnClickListener { view : View ->
+        binding.saveNoteButton.setOnClickListener {
 
-            if (binding.noteTextET.text.isNotEmpty()){
-                var newNote = Note("",binding.noteTextET.text.toString())
+            if (binding.noteTextEditText.text.isNotEmpty()){
+                var newNote = Note("",binding.noteTextEditText.text.toString())
                 saveNote(newNote)
             }else{
                 Toast.makeText(requireContext(),"Please write new note firstly",Toast.LENGTH_LONG).show()
@@ -56,7 +53,6 @@ class AddNoteFragment : Fragment() {
         newNote.id = database.push().key ?: ""
         database.child(newNote.id).setValue(newNote).addOnSuccessListener {
             findNavController().navigate(R.id.action_addNoteFragment_to_allNotesFragment)
-//            Toast.makeText(requireContext(),"new note is saved",Toast.LENGTH_LONG).show()
         }.addOnFailureListener{
             Log.e("firebase", "Error getting data", it)
         }

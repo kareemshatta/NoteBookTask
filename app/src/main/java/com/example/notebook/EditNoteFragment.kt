@@ -62,17 +62,17 @@ class EditNoteFragment : Fragment() {
         }else{
             findNavController().navigate(R.id.action_editNoteFragment_to_allNotesFragment)
         }
-        binding.noteTextET.doAfterTextChanged {
-            var newNote = Note(noteId,binding.noteTextET.text.toString())
+        binding.noteTextEditText.doAfterTextChanged {
+            var newNote = Note(noteId,binding.noteTextEditText.text.toString())
             editNote(newNote)
-            binding.noteTextET.setSelection(binding.noteTextET.text.length)
+            binding.noteTextEditText.setSelection(binding.noteTextEditText.text.length)
 //            Log.d("EditNoteFragment","text is changed")
         }
 
-        binding.saveNoteBtn.setOnClickListener { view : View ->
+        binding.saveNoteButton.setOnClickListener { view : View ->
 
-            if (binding.noteTextET.text.isNotEmpty()){
-                var newNote = Note(noteId,binding.noteTextET.text.toString())
+            if (binding.noteTextEditText.text.isNotEmpty()){
+                var newNote = Note(noteId,binding.noteTextEditText.text.toString())
                 editNote(newNote)
                 Toast.makeText(requireContext(),"your note is updated successfully",Toast.LENGTH_LONG).show()
             }else{
@@ -80,7 +80,7 @@ class EditNoteFragment : Fragment() {
             }
         }
 
-        binding.copyNoteLinkBtn.setOnClickListener{view: View ->
+        binding.copyNoteLinkButton.setOnClickListener{view: View ->
 
             copyNoteLinkToClipboard("example.com/EditNoteFragment/$userId/$noteId")
         }
@@ -110,7 +110,7 @@ class EditNoteFragment : Fragment() {
 
 
     private fun readNoteData(noteId: String){
-        binding.loadNoteBP.visibility = View.VISIBLE
+        binding.loadNoteProgressBar.visibility = View.VISIBLE
 
         databaseRef = FirebaseDatabase.getInstance().getReference("Notes/$userId/$noteId")
 
@@ -121,19 +121,16 @@ class EditNoteFragment : Fragment() {
                     val id = requireNotNull(dataSnapshot.children.elementAt(0).getValue(String::class.java))
                     val text = requireNotNull(dataSnapshot.children.elementAt(1).getValue(String::class.java))
                     note = Note(id,text)
-                    binding.noteTextET.setText(note.text)
-//                    Toast.makeText(requireContext(),id +" ==== "+text,Toast.LENGTH_LONG).show()
-                    binding.loadNoteBP.visibility = View.GONE
+                    binding.noteTextEditText.setText(note.text)
+                    binding.loadNoteProgressBar.visibility = View.GONE
 
                 }else{
-                    binding.loadNoteBP.visibility = View.VISIBLE
-//                    Log.d("NotesActivity_Read", "snapshot:not exist")
+                    binding.loadNoteProgressBar.visibility = View.VISIBLE
                 }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
-                binding.loadNoteBP.visibility = View.VISIBLE
-//                Log.d("NotesActivity_Read", "loadPost:onCancelled"+databaseError.message)
+                binding.loadNoteProgressBar.visibility = View.VISIBLE
             }
         }
         )

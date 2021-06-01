@@ -48,7 +48,7 @@ class AllNotesFragment : Fragment(),NotesClickListnerInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.addNoteBtn.setOnClickListener { view : View ->
+        binding.addNoteButton.setOnClickListener { view : View ->
             findNavController(view).navigate(R.id.action_allNotesFragment_to_addNoteFragment)
         }
 
@@ -56,7 +56,7 @@ class AllNotesFragment : Fragment(),NotesClickListnerInterface {
     }
 
     private fun readNotesData(){
-        binding.loadNotesBP.visibility = View.VISIBLE
+        binding.loadNotesProgressBar.visibility = View.VISIBLE
         noteList = mutableListOf()
 
         databaseRef.addValueEventListener( object : ValueEventListener {
@@ -67,13 +67,13 @@ class AllNotesFragment : Fragment(),NotesClickListnerInterface {
                     for (note in dataSnapshot.children){
                         noteList.add(requireNotNull(note.getValue(Note::class.java)))
                     }
-                    binding.loadNotesBP.visibility = View.GONE
+                    binding.loadNotesProgressBar.visibility = View.GONE
                     binding.notesRecyclerView.layoutManager = LinearLayoutManager(this@AllNotesFragment.context,
                         RecyclerView.VERTICAL,false)
                     val rvAdapter = NotesRecyclerViewAdapter(this@AllNotesFragment,noteList)
                     binding.notesRecyclerView.adapter = rvAdapter
                 }else{
-                    binding.loadNotesBP.visibility = View.GONE
+                    binding.loadNotesProgressBar.visibility = View.GONE
                     Toast.makeText(requireContext(),"Can't find any note",Toast.LENGTH_LONG).show()
                     Log.d("NotesActivity_Read", "snapshot:not exist")
                 }
@@ -81,7 +81,7 @@ class AllNotesFragment : Fragment(),NotesClickListnerInterface {
 
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
-                binding.loadNotesBP.visibility = View.GONE
+                binding.loadNotesProgressBar.visibility = View.GONE
                 Toast.makeText(requireContext(),"connection error",Toast.LENGTH_LONG).show()
             }
         }

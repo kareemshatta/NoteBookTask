@@ -22,7 +22,7 @@ class NotesRecyclerViewAdapter(private val fragment: AllNotesFragment, private v
 
         init {
             // Define click listener for the ViewHolder's View.
-            noteTV = view.findViewById(R.id.note_text_TextView) as TextView
+            noteTextView = view.findViewById(R.id.note_text_TextView) as TextView
         }
 
     }
@@ -41,8 +41,8 @@ class NotesRecyclerViewAdapter(private val fragment: AllNotesFragment, private v
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        noteViewHolder.noteTV.text = notesList.get(position).text
-        noteViewHolder.noteTV.setOnClickListener(){
+        noteViewHolder.noteTextView.text = notesList.get(position).text
+        noteViewHolder.noteTextView.setOnClickListener(){
             fragment.onNoteClicked(notesList.get(position).id)
         }
 
